@@ -25,6 +25,14 @@ public class PizzaRunner implements ApplicationRunner {
     private Topping ham;
 
     @Autowired
+    @Qualifier("cheese")
+    private Topping cheese;
+
+    @Autowired
+    @Qualifier("tomato")
+    private Topping tomato;
+
+    @Autowired
     @Qualifier("pineapple")
     private Topping pineapple;
 
@@ -47,38 +55,40 @@ public class PizzaRunner implements ApplicationRunner {
 
 
 
+
     @Override
     @Transactional
     public void run(ApplicationArguments args) throws Exception {
-        List<Pizza> pizzas = new ArrayList<>();
+
         if(pizzaRepo.count() == 0) {
             // pizza margherita
-            pizzas.add(pizzaProvider.getObject());
+            Pizza margherita = pizzaProvider.getObject();
+            pizzaRepo.save(margherita);
+            System.out.println("----" + margherita);
 
             // pizza hawaiian
             Pizza hawaiianPizza = pizzaProvider.getObject();
             hawaiianPizza.setName("Hawaiian Pizza");
             hawaiianPizza.setPrice(6.49);
+            Topping ham = toppingRepo.findByName("ham");
             hawaiianPizza.getToppings().add(ham);
+            Topping pineapple = toppingRepo.findByName("pineapple");
             hawaiianPizza.getToppings().add(pineapple);
+            ham.getPizzas().add(hawaiianPizza);
+            pineapple.getPizzas().add(hawaiianPizza);
             hawaiianPizza.setCalories(hawaiianPizza.getCalories() + ham.getCalories() + pineapple.getCalories());
-            pizzas.add(hawaiianPizza);
+            pizzaRepo.save(hawaiianPizza);
 
 
             // pizza salame
             Pizza salamiPizza = pizzaProvider.getObject();
             salamiPizza.setName("Salami Pizza");
             salamiPizza.setPrice(5.99);
+            Topping salami = toppingRepo.findByName("salami");
             salamiPizza.getToppings().add(salami);
+            salami.getPizzas().add(salamiPizza);
             salamiPizza.setCalories(salamiPizza.getCalories() + salami.getCalories());
-            pizzas.add(salamiPizza);
-
-            for (int i = 0; i < pizzas.size(); i++) {
-                Pizza pizza = pizzas.get(i);
-                pizza.getToppings().forEach(t -> t.setPizza(pizza));
-                pizzaRepo.save(pizza);
-            }
-
+            pizzaRepo.save(salamiPizza);
         }
 
     }

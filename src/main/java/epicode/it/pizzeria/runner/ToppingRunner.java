@@ -45,14 +45,7 @@ public class ToppingRunner implements ApplicationRunner {
     @Transactional
     public void run(ApplicationArguments args) throws Exception {
 
-        if (toppingRepo.count() == 0) {
-            toppingRepo.save(cheese);
-            toppingRepo.save(tomato);
-            toppingRepo.save(ham);
-            toppingRepo.save(pineapple);
-            toppingRepo.save(salami);
-            toppingRepo.save(onions);
-        }
+
 
     }
 }

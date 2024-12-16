@@ -20,18 +20,23 @@ public class PizzaConfigurator {
     @Qualifier("tomato")
     private Topping tomato;
 
-
+    @Autowired
+    private ToppingRepo toppingRepo;
 
     @Bean
     @Scope("prototype")
     public Pizza getBase() {
-        Pizza margherita = new Pizza();
-        margherita.setName("Pizza Margherita");
-        margherita.setPrice(4.99);
-        margherita.getToppings().add(cheese);
-        margherita.getToppings().add(tomato);
-        margherita.setCalories(margherita.getCalories() + cheese.getCalories() + tomato.getCalories());
-        return margherita;
+        Pizza pizzaBase = new Pizza();
+        pizzaBase.setName("Pizza Margherita");
+        pizzaBase.setPrice(4.99);
+        Topping cheese = toppingRepo.findByName("cheese");
+        Topping tomato = toppingRepo.findByName("tomato");
+        pizzaBase.getToppings().add(cheese);
+        pizzaBase.getToppings().add(tomato);
+        cheese.getPizzas().add(pizzaBase);
+        tomato.getPizzas().add(pizzaBase);
+        pizzaBase.setCalories(pizzaBase.getCalories() + cheese.getCalories() + tomato.getCalories());
+        return pizzaBase;
     }
 
 
