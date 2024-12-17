@@ -64,7 +64,6 @@ public class PizzaRunner implements ApplicationRunner {
             // pizza margherita
             Pizza margherita = pizzaProvider.getObject();
             pizzaRepo.save(margherita);
-            System.out.println("----" + margherita);
 
             // pizza hawaiian
             Pizza hawaiianPizza = pizzaProvider.getObject();
